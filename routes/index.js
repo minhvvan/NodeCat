@@ -2,7 +2,7 @@ const express = require('express');
 const axios = require('axios');
 
 const router = express.Router();
-const URL = 'http://localhost:8002/v1';
+const URL = 'http://localhost:8002/v2';
 
 axios.defaults.headers.origin = 'http://localhost:4000'; // origin 헤더 추가
 
@@ -53,7 +53,7 @@ router.get('/search/:hashtag', async (req, res, next) => {
 router.get('/test', async (req, res, next) => { //토큰 테스트 라우터
     try{
         if(!req.session.jwt){
-            const tokenResult = await axios.post('http://localhost:8002/v1/token', {
+            const tokenResult = await axios.post(`${URL}/token`, {
                 clientSecret: process.env.CLIENT_SECRET,
             });
             if(tokenResult.data && tokenResult.data.code === 200){ //토큰 발급 성공
@@ -63,7 +63,7 @@ router.get('/test', async (req, res, next) => { //토큰 테스트 라우터
             }
         }
         //토큰 테스트
-        const result = await axios.get('http://localhost:8002/v1/test', {
+        const result = await axios.get(`${URL}/test`, {
             headers: {authorization: req.session.jwt},
         });
         return res.json(result.data);
